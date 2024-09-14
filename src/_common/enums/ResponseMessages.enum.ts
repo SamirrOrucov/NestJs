@@ -1,0 +1,7 @@
+export enum ResponseMessages {
+  SUCCESS = 'Success',
+  BAD_GATEWAY = 'BAD_GATEWAY',
+  NOT_FOUND = 'NOT_FOUND',
+  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
+   UNAUTH = 'UNAUTH',
+}
