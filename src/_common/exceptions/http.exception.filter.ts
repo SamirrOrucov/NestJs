@@ -7,6 +7,7 @@ import {
 import { Request, Response } from 'express';
 import { BaseResponse } from 'src/_base/response/base.response';
 import { ResponseMessages } from '../enums/ResponseMessages.enum';
+import { DtoPrefix } from '../enums/ValidationMessages.enum';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -15,6 +16,20 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
+    const prefixList:DtoPrefix[]=Object.values(DtoPrefix)
+    const validationMessages=prefixList.find(prefix=>{
+      return (exception.message && exception.message.startsWith(prefix))
+    })
+    if (validationMessages) {
+      response
+      .status(status)
+      .json(
+        new BaseResponse(null, exception.message, status, false),
+      );
+      
+    }
+    else{
+
     let responseMessage: ResponseMessages;
     switch (status) {
       case 401:
@@ -37,5 +52,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       .json(
         new BaseResponse(null, responseMessage, status, false),
       );
+    }
+
   }
 }
